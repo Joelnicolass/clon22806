@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../../auth/context/AuthProvider";
 
 const Nav = () => {
   return (

@@ -1,7 +1,18 @@
 import React from "react";
+import { useAuth } from "../../../auth/context/AuthProvider";
 
 const LoginView = () => {
-  return <div>LoginView</div>;
+  const { login } = useAuth();
+
+  const handleLogin = () => {
+    login("Nico");
+  };
+
+  return (
+    <div>
+      <button onClick={handleLogin}>Iniciar Sesión</button>
+    </div>
+  );
 };
 
 export default LoginView;

@@ -1,23 +1,47 @@
-import React, { useState, useContext } from "react";
+import React, { useReducer, useContext } from "react";
+import {
+  authInitialState,
+  authReducer,
+  AUTH_TYPES,
+  initializeAuthState,
+} from "../reducers/authReducer";
 import { AuthContext } from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
-  const [isAuth, setIsAuth] = useState(false);
+  const [auth, dispatch] = useReducer(
+    authReducer,
+    authInitialState,
+    initializeAuthState
+  );
 
-  const login = () => {
-    setIsAuth(true);
+  const login = (name) => {
+    dispatch({
+      type: AUTH_TYPES.LOGIN,
+      payload: { name },
+    });
+
+    const auth = {
+      name,
+      isAuth: true,
+    };
+
+    localStorage.setItem("auth", JSON.stringify(auth));
   };
 
   const logout = () => {
-    setIsAuth(false);
+    dispatch({
+      type: AUTH_TYPES.LOGOUT,
+    });
+
+    localStorage.removeItem("auth");
   };
 
   return (
     <AuthContext.Provider
       value={{
-        isAuth,
         login,
         logout,
+        auth,
       }}
     >
       {children}
@@ -28,10 +52,10 @@ const AuthProvider = ({ children }) => {
 export default AuthProvider;
 
 export const useAuth = () => {
-  const { isAuth, login, logout } = useContext(AuthContext);
+  const { login, logout, auth } = useContext(AuthContext);
   return {
-    isAuth,
     login,
     logout,
+    auth,
   };
 };

@@ -4,22 +4,43 @@ import Layout from "../common/components/layout/Layout";
 import LoginView from "../features/login/views/LoginView";
 import MoviesView from "../features/movies/views/MoviesView";
 import MovieView from "../features/movies/views/MovieView";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginView />} />
+        <Route
+          path="/"
+          element={
+            <PublicRoute url={"movies"}>
+              <LoginView />
+            </PublicRoute>
+          }
+        />
 
         <Route
           path="movies"
           element={
-            <Layout>
-              <MoviesView />
-            </Layout>
+            <ProtectedRoute url={"/"}>
+              <Layout>
+                <MoviesView />
+              </Layout>
+            </ProtectedRoute>
           }
         />
-        <Route path="movie/:id" element={<MovieView />} />
+
+        <Route
+          path="movie/:id"
+          element={
+            <ProtectedRoute url={"/"}>
+              <MovieView />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </BrowserRouter>
   );
